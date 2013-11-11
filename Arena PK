@@ -1,0 +1,264 @@
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Npc criado por Thiago
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Nome do Npc Arenas PvP
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Versão atual 1.0
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Npc criado em 05/11/2013
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Compatível com A porra toda
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+prontera,153,153,5	script	Arenas PK	479,{
+
+//---------------- MAPAS DAS ARENAS -------------+
+//-- Arena PK Oficial 
+set $oficial$,"new_1-1"; 
+set $ox,53;
+set $oy,111;
+
+//-- Arena PK Nao-VIP --
+set $naovip$,"niflheim"; 
+set $nx,32;
+set $ny,158;
+
+//-- Arena PK Old Times --
+set $old$,"jawaii"; 
+set $tx,163;
+set $ty,130;
+
+//-- Arena PK Sem Donates --
+set $semdonates$,"ayothaya"; 
+set $sx,151;
+set $sy,117;
+
+//-- Arena PK Nao-VIP Sem Donates --
+set $nsd$,"sec_pri"; 
+set $nsx,23;
+set $nsy,61;
+
+//------------ID'S DOS ITENS DONATES--------------+
+setarray .@id[0], 603,604,605; // Adicione os IDs dos Donate do seu servidor voce pode adicionar até 127 donate..
+
+//------------ ID'S DAS CLASSES QUE NÃO PODEM ENTRAR NA ARENA OLD TIMES -------------------+
+ setarray .@cl[0], 4054,4055,4056,4057,4058,4059,4060,4061,4062,4063,4064,4065,
+		4066,4067,4068,4069,4070,4071,4072,4073,4074,4075,4076,4077,4078,4079,4080,4081,
+		4082,4083,4084,4085,4086,4087,4096,4097,4098,4099,4100,4101,4102,4103,4104,4105,
+		4106,4107,4108,4109,4110,4111,4112,4190,4191,4211,4212,24,25,4049; 
+		
+   	mes set ( .@c$, "[^FF0000Porteiro da Arena PK^000000]" );
+	mes "Arena PK tem 5 arenas:";
+	mes "---------------------";
+	mes "Arena PK Oficial: ^0000FF["+getmapusers(""+$oficial$+"")+"]^000000 Rank ^339966[ON]^000000"; 
+	mes "Arena PK Nao-VIP: ^0000FF["+getmapusers(""+$naovip$+"")+"] ^000000 Rank ^339966[ON]^000000";
+	mes "Arena PK Old Times: ^0000FF["+getmapusers(""+$old$+"")+"]^000000";
+	mes "Arena PK Sem Donates: ^0000FF["+getmapusers(""+$semdonates$+"")+"]^000000";
+	mes "Arena PK Nao-VIP Sem Donates: ^0000FF["+getmapusers(""+$nsd$+"")+"]^000000";
+	next;
+	mes .@c$;
+        mes" Em qual arena voce gostaria de entrar?";
+        switch(select("- Arena PK Oficial","- Arena PK Nao-VIP","- Arena PK Old Times","- Arena PK Sem Donates","- Arena PK Nao-VIP Sem Donates","Sair")) { next;
+	
+		case 1:
+        	mes .@c$;
+			mes "Boa sorte!!!";
+			close2;
+			warp $oficial$,$ox,$oy;
+			if (getgmlevel() < 20) MapAnnounce ""+$oficial$+"","["+strcharinfo(0)+"] entrou na Arena PK Oficial.",8;
+
+		case 2:
+			if (getgmlevel() == 1) { 
+			mes "Jogadores VIP não podem entrar nessa Arena!";
+			close;
+			}
+			mes .@c$;
+			mes "Boa sorte!!!";
+			close2;
+			warp $naovip$,$nx,$ny;
+			if (getgmlevel() < 20) MapAnnounce ""+$naovip$+"","["+strcharinfo(0)+"] entrou na Arena PK Não-VIP.",8;
+		
+		case 3:
+			for(set @c,0;@c < getarraysize(.@cl);set @c,@c+1){
+			if(Class == (.@cl[@c])){
+			mes .@c$;
+           		mes "Você não tem permição para entrar nesse mapa com essa classe";
+            		close;                               
+		}
+		}
+			mes .@c$;
+			mes "Boa sorte!!!";
+			close2;
+			warp $old$,$tx,$ty;
+			if (getgmlevel() < 20) MapAnnounce ""+$old$+"","["+strcharinfo(0)+"] entrou na Arena PK Old Times.",8;
+		
+		case 4:
+			for(set @d,0;@d < getarraysize(.@id);set @d,@d+1){
+			if(countitem(.@id[@d]) >= 1){
+			mes .@c$;
+			mes "Você não pode entrar com Donates!";
+			close;
+		}
+		}
+			mes .@c$;
+			mes "Boa sorte!!!";
+			close2;
+			warp $semdonates$,$sx,$sy;
+			if (getgmlevel() < 20) MapAnnounce ""+$semdonates$+"","["+strcharinfo(0)+"] entrou na Arena PK Sem Donates.",8;
+
+		case 5:
+			if (getgmlevel() == 1) { 
+			mes "Jogadores VIP não podem entrar nessa Arena!";
+			close;
+		}
+			for(set @d,0;@d < getarraysize(.@id);set @d,@d+1){
+			if(countitem(.@id[@d]) >= 1){
+			mes .@c$;
+			mes "Você não pode entrar com Donates!";
+			close;
+		}
+		}
+			mes .@c$;
+			mes "Boa sorte!!!";
+			close2;
+			warp $nsd$,$nsx,$nsy;
+			if (getgmlevel() < 20)  MapAnnounce ""+$nsd$+"","["+strcharinfo(0)+"] Arena PK Nao-VIP Sem Donates.",8;
+		
+		case 6:
+			mes .@c$;
+			mes "Volte quando quiser!";
+			close; 
+}
+OnPCDieEvent:
+
+	getmapxy @map$,@x,@y,0;
+	if ( @map$ == ""+$oficial$+"" || @map$ == ""+$naovip$+"" ) {
+
+		set @P10,getcharid(0);
+		set @MR10,0;
+		set @MN1$,"";
+		set @class1$,jobname(Class);
+		query_sql "SELECT `Morreu` FROM `rank_arena_pk` WHERE `char_id`="+@P10+"",@MR10;
+		query_sql "SELECT `char_name` FROM `rank_arena_pk` WHERE `char_id`="+@P10+"",@MN1$;
+
+		if (@MN1$ == ""){
+		query_sql "INSERT INTO `rank_arena_pk` (`char_id`,`char_name`,`Class`,`Morreu`) VALUES ("+@P10+",'"+strcharinfo(0)+"','"+@class1$+"',1)",@esc$;
+		end;
+	}
+		query_sql "UPDATE `rank_arena_pk` SET `Morreu` = `Morreu` +1 WHERE `char_id`="+@P10+"",@esc$;
+	} 
+	end;
+	
+OnPCKillEvent:
+
+	getmapxy @map$,@x,@y,0;
+	if ( @map$ == ""+$oficial$+"" || @map$ == ""+$naovip$+"" || @map$ == ""+$old$+"" || @map$ == ""+$semdonates$+"" || @map$ ==  ""+$nsd$+"" ) {
+	
+		set @P10,getcharid(0);
+		set @MT10,0;
+		set @NM1$, "";
+		set @class$,jobname(Class);
+		query_sql "SELECT `Matou` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MT10;
+		query_sql "SELECT `Morreu` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MR10;
+		query_sql "SELECT `Char_name` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@NM1$;
+
+	if ( @NM1$ == "" ) {
+	if ( @map$ == ""+$oficial$+"" || @map$ == ""+$naovip$+"" ) {
+		query_sql "INSERT INTO `rank_arena_pk` (`Char_id`,`Char_name`,`Class`,`Matou`) VALUES ("+@P10+",'"+strcharinfo(0)+"','"+@class$+"',1)",@esc$;
+		query_sql "SELECT `Matou` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MT10;
+		query_sql "SELECT `Morreu` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MR10;
+		mapannounce @map$,"O Jogador [" +strcharinfo(0) +"] matou o jogador [" +rid2name(killedrid) +"] Matou:"+@MT10+" / Morreu:"+@MR10+"",bc_blue;
+		getitem 7420,1; end; 
+	} else{
+		query_sql "SELECT `Morreu` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MR10;
+		query_sql "SELECT `Matou` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MT10;
+		mapannounce @map$,"O Jogador [" +strcharinfo(0) +"] matou o jogador [" +rid2name(killedrid) +"] Matou:"+@MT10+" / Morreu:"+@MR10+"",bc_blue;
+	}	
+	}
+	if ( @map$ == ""+$oficial$+"" || @map$ == ""+$naovip$+"" ) {
+		query_sql "UPDATE `rank_arena_pk` SET `Matou` = `Matou` +1 WHERE `Char_id`="+@P10+"",@esc$;
+		query_sql "SELECT `Matou` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MT10;
+		query_sql "SELECT `Morreu` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MR10;
+		mapannounce @map$,"O Jogador [" +strcharinfo(0) +"] matou o jogador [" +rid2name(killedrid) +"] Matou:"+@MT10+" / Morreu:"+@MR10+"",bc_blue;
+		getitem 7420,1; 
+	}else{
+		query_sql "SELECT `Matou` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MT10;
+		query_sql "SELECT `Morreu` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MR10;
+		mapannounce @map$,"O Jogador [" +strcharinfo(0) +"] matou o jogador [" +rid2name(killedrid) +"] Matou:"+@MT10+" / Morreu:"+@MR10+"",bc_blue;
+	}
+    }	
+}
+new_1-1,46,111,6	script	Porteiro::mmp	105,{
+
+	mes "[^FF0000Saida^000000]";
+	mes "Deseja ir para prontera ?";
+	next;
+	if(Select("Sim","Não")==2) close;
+	sleep2 1000; 
+	dispbottom "Saindo em 5";
+	sleep2 1000; 
+	dispbottom "Saindo em 4";
+	sleep2 1000; 
+	dispbottom "Saindo em 3";
+	sleep2 1000; 
+	dispbottom "Saindo em 2";
+	sleep2 1000; 
+	dispbottom "Saindo em 1";
+	sleep2 1000; 	
+	warp "prontera",150,150;
+	end;
+	OnInit:
+	waitingroom "Saida",0;
+	end;
+	
+}
+
+niflheim,32,158,6	duplicate(mmp)	Porteiro#1	105
+jawaii,161,138,6	duplicate(mmp)	Porteiro#2	105
+ayothaya,145,111,6	duplicate(mmp)	Porteiro#3	105
+sec_pri,19,59,6	duplicate(mmp)	Porteiro#4	105
+
+new_1-1	mapflag	nowarp
+new_1-1	mapflag	nowarpto
+new_1-1	mapflag	noteleport
+new_1-1	mapflag	nogo
+new_1-1	mapflag	nosave	SavePoint
+new_1-1	mapflag	nomemo
+new_1-1	mapflag	nobranch
+new_1-1	mapflag	nopenalty
+
+niflheim	mapflag	nowarp
+niflheim	mapflag	nowarpto
+niflheim	mapflag	noteleport
+niflheim	mapflag	nogo
+niflheim	mapflag	nosave	SavePoint
+niflheim	mapflag	nomemo
+niflheim	mapflag	nobranch
+niflheim	mapflag	nopenalty
+
+jawaii	mapflag	nowarp
+jawaii	mapflag	nowarpto
+jawaii	mapflag	noteleport
+jawaii	mapflag	nogo
+jawaii	mapflag	nosave	SavePoint
+jawaii	mapflag	nomemo
+jawaii	mapflag	nobranch
+jawaii	mapflag	nopenalty
+jawaii	mapflag	pvp 
+
+ayothaya	mapflag	nowarp
+ayothaya	mapflag	nowarpto
+ayothaya	mapflag	noteleport
+ayothaya	mapflag	nogo
+ayothaya	mapflag	nosave	SavePoint
+ayothaya	mapflag	nomemo
+ayothaya	mapflag	nobranch
+ayothaya	mapflag	nopenalty
+
+sec_pri	mapflag	nowarp
+sec_pri	mapflag	nowarpto
+sec_pri	mapflag	noteleport
+sec_pri	mapflag	nogo
+sec_pri	mapflag	nosave	SavePoint
+sec_pri	mapflag	nomemo
+sec_pri	mapflag	nobranch
+sec_pri	mapflag	nopenalty
