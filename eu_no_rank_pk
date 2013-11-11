@@ -1,0 +1,34 @@
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Npc criado por Thiago
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Nome do Npc Eu no Rank PK
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Versão atual 1.0
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Npc criado em 08/11/2013
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+// Compatível com a porra toda
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
+prontera,157,166,5	script	Eu no Rank PK	404,{
+
+    	set @P10,getcharid(0);
+    	query_sql "SELECT `Matou` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MT10;
+    	query_sql "SELECT `Morreu` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MR10;
+
+    	mes "[^FF0000Eu no Rank PK^000000]";
+    	mes "-- Rank PK --";
+	if (@MR10 == 0) mes "Na arena PK você matou: ^0000FF"+@MT10+"^000000 e você morreu: ^FF6600"+@MR10+"^000000 vez.";
+    	if (@MR10 == 1) mes "Na arena PK você matou: ^0000FF"+@MT10+"^000000 e você morreu: ^FF6600"+@MR10+"^000000 vez.";
+	if (@MR10 >= 2) mes "Na arena PK você matou: ^0000FF"+@MT10+"^000000 e você morreu: ^FF6600"+@MR10+"^000000 vezes.";
+
+	query_sql "SELECT `char`.char_id,`char`.`name`,global_reg_value.`value` FROM global_reg_value LEFT JOIN `char` ON global_reg_value.char_id=`char`.char_id WHERE 
+
+		global_reg_value.str='brokeemp' ORDER BY CAST(`global_reg_value`.`value` AS UNSIGNED) DESC LIMIT 10", .@char_id, .@name$, .@count;
+    	mes "-- Hall da Fama --";
+    	mes "No Hall da Fama você quebrou: ^FF0000"+brokeemp+"^000000 Emperiuns";
+
+    	next;
+    	mes "[^FF0000Eu no Rank PK^000000]";
+    	mes "Até mais...";
+    	close;
+}
