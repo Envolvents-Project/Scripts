@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS `rank_arena_pk`;
+CREATE TABLE `rank_arena_pk` (
+`Char_id` int (11) unsigned NOT NULL,
+`Char_name` varchar (24) NOT NULL,
+`Class` varchar (24) NOT NULL,
+`Lvljob` varchar (24) NOT NULL,
+`Matou` int (10) unsigned NOT NULL,
+`Morreu` int (10) unsigned NOT NULL,
+PRIMARY KEY (`Char_id`)
+) ENGINE = MyISAM;
