@@ -201,15 +201,10 @@ new_1-1,46,111,6	script	Porteiro::mmp	105,{
 	next;
 	if(Select("Sim","Não")==2) close;
 	sleep2 1000; 
-	dispbottom "Saindo em 5";
 	sleep2 1000; 
-	dispbottom "Saindo em 4";
 	sleep2 1000; 
-	dispbottom "Saindo em 3";
 	sleep2 1000; 
-	dispbottom "Saindo em 2";
 	sleep2 1000; 
-	dispbottom "Saindo em 1";
 	sleep2 1000; 	
 	warp "prontera",150,150;
 	end;
