@@ -12,8 +12,6 @@
 
 -	script	anunciante de mortes	-1,{
 
-
-
 OnPCDieEvent:
 
 	setarray $castelos$[0], "aldeg_cas01","aldeg_cas02","aldeg_cas03","aldeg_cas04","aldeg_cas05",	        
@@ -41,7 +39,8 @@ OnPCDieEvent:
 +"/"+@job$+"',1)",@esc$;end;
 	}
 		query_sql "UPDATE `rank_arena_pk` SET `Morreu` = `Morreu` +1 WHERE `char_id`="+@P10+"",@esc$;
-    } 
+    }
+end;
 }
 		  	      	      	
 OnPCKillEvent:
@@ -75,5 +74,5 @@ OnPCKillEvent:
 		mapannounce @map$,"O Jogador [" +strcharinfo(0) +"] matou o jogador [" +rid2name(killedrid) +"] Matou:"+@MT10+" / Morreu:"+@MR10+"",bc_blue;
 		getitem 7420,1; end;
 	}	
-  }
+    }    
 }
