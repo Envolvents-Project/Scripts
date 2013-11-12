@@ -1,5 +1,5 @@
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
-// Npc criado por Thiago
+// Npc criado por Thiago & Wellington
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
 // Nome do Npc Arenas PvP
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
@@ -9,7 +9,7 @@
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
 // Compatível com A porra toda
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=+
-prontera,153,153,5	script	Arenas PK	479,{
+prontera,164,166,3	script	Arenas PK	437,{
 
 //---------------- MAPAS DAS ARENAS -------------+
 //-- Arena PK Oficial 
@@ -137,12 +137,15 @@ OnPCDieEvent:
 		set @MR10,0;
 		set @MN1$,"";
 		set @class1$,jobname(Class);
+		set @lvl$, BaseLevel;
+                set @job$, JobLevel;
 		query_sql "SELECT `Morreu` FROM `rank_arena_pk` WHERE `char_id`="+@P10+"",@MR10;
 		query_sql "SELECT `char_name` FROM `rank_arena_pk` WHERE `char_id`="+@P10+"",@MN1$;
 
 		if (@MN1$ == ""){
-		query_sql "INSERT INTO `rank_arena_pk` (`char_id`,`char_name`,`Class`,`Morreu`) VALUES ("+@P10+",'"+strcharinfo(0)+"','"+@class1$+"',1)",@esc$;
-		end;
+		query_sql "INSERT INTO `rank_arena_pk` (`char_id`,`char_name`,`Class`,`Lvljob`,`Morreu`) VALUES ("+@P10+",'"+strcharinfo(0)+"','"+@class1$+"','"+@lvl$
+
++"/"+@job$+"',1)",@esc$;end;
 	}
 		query_sql "UPDATE `rank_arena_pk` SET `Morreu` = `Morreu` +1 WHERE `char_id`="+@P10+"",@esc$;
 	} 
@@ -157,13 +160,17 @@ OnPCKillEvent:
 		set @MT10,0;
 		set @NM1$, "";
 		set @class$,jobname(Class);
+		set @lvl$, BaseLevel;
+                set @job$, JobLevel;
 		query_sql "SELECT `Matou` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MT10;
 		query_sql "SELECT `Morreu` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MR10;
 		query_sql "SELECT `Char_name` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@NM1$;
 
 	if ( @NM1$ == "" ) {
 	if ( @map$ == ""+$oficial$+"" || @map$ == ""+$naovip$+"" ) {
-		query_sql "INSERT INTO `rank_arena_pk` (`Char_id`,`Char_name`,`Class`,`Matou`) VALUES ("+@P10+",'"+strcharinfo(0)+"','"+@class$+"',1)",@esc$;
+		 query_sql "INSERT INTO `rank_arena_pk` (`Char_id`,`Char_name`,`Class`,`Lvljob`,`Matou`) VALUES ("+@P10+",'"+strcharinfo(0)+"','"+@class$+"','"+@lvl$
+
++"/"+@job$+"',1)",@esc$;
 		query_sql "SELECT `Matou` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MT10;
 		query_sql "SELECT `Morreu` FROM `rank_arena_pk` WHERE `Char_id`="+@P10+"",@MR10;
 		mapannounce @map$,"O Jogador [" +strcharinfo(0) +"] matou o jogador [" +rid2name(killedrid) +"] Matou:"+@MT10+" / Morreu:"+@MR10+"",bc_blue;
